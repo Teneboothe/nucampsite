@@ -1,25 +1,31 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { Formik, Field, Form, ErrorMessage } from "formik";
 import {
   Button,
   Modal,
   ModalHeader,
   ModalBody,
-  FormGroup,
   Label,
+  FormGroup
 } from "reactstrap";
-import { Formik, Field, Form, ErrorMessage } from "formik";
 import { validateCommentForm } from "../../utils/validateCommentForm";
+import { addComment } from './commentsSlice';
 
 const CommentForm = ({ campsiteId }) => {
   const [modalOpen, setModalOpen] = useState(false);
+
+  const dispatch = useDispatch();
   const handleSubmit = (values) => {
     const comment = {
       campsiteId: parseInt(campsiteId),
       rating: values.rating,
       author: values.author,
       text: values.commentText,
+      date: new Date(Date.now()).toISOString(),
     };
     console.log(comment);
+    dispatch(addComment(comment));
     setModalOpen(false);
   };
 
@@ -35,7 +41,8 @@ const CommentForm = ({ campsiteId }) => {
         <ModalBody>
           <Formik
             initialValues={{ commentText: "", rating: undefined, author: "" }}
-            onSubmit={handleSubmit} validate={validateCommentForm}
+            onSubmit={handleSubmit}
+            validate={validateCommentForm}
           >
             <Form>
               <FormGroup>
@@ -48,7 +55,9 @@ const CommentForm = ({ campsiteId }) => {
                   <option>4</option>
                   <option>5</option>
                 </Field>
-                <ErrorMessage name='rating'>{(msg) => <p className="text-danger">{msg}</p>}</ErrorMessage>
+                <ErrorMessage name="rating">
+                  {(msg) => <p className="text-danger">{msg}</p>}
+                </ErrorMessage>
               </FormGroup>
               <FormGroup>
                 <Label htmlFor="author">Your Name</Label>
@@ -57,7 +66,9 @@ const CommentForm = ({ campsiteId }) => {
                   placeholder="Your Name"
                   className="form-control"
                 />
-                <ErrorMessage name='author'>{(msg) => <p className="text-danger">{msg}</p>}</ErrorMessage>
+                <ErrorMessage name="author">
+                  {(msg) => <p className="text-danger">{msg}</p>}
+                </ErrorMessage>
               </FormGroup>
               <FormGroup>
                 <Label htmlFor="commentText">Comment</Label>
