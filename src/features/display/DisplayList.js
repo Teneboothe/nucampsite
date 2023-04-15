@@ -31,7 +31,7 @@ console.log('display items:', items);
                             <AnimatedDisplayCard item={featuredItem} />
                         </Col>
                     )
-                );
+                )
             })}
         </Row>
     );
